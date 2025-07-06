@@ -1,8 +1,11 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.services;
 
+import com.augustin.gabriel.goldenraspberryawardsapi.entities.StudioEntity;
+import com.augustin.gabriel.goldenraspberryawardsapi.utils.StringUtils;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,12 +18,15 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DataLoaderServiceImpl implements DataLoaderService {
 
     private static final String PATH_CSV_DATA_FILE = "data.csv";
 
     @Value("${csv.parser.separator-char:;}")
     private char separator;
+
+    private final StudioService studioService;
 
     @Override
     public void loadDataFromCsvFile() throws Exception {
@@ -42,6 +48,10 @@ public class DataLoaderServiceImpl implements DataLoaderService {
         try (CSVReader reader = csvReaderBuilder.build()) {
             List<String[]> linhas = reader.readAll();
             for (String[] linha : linhas) {
+
+                List<StudioEntity> studios = studioService.findOrCreateByNames(StringUtils.splitFromString(linha[2]));
+
+
                 log.info("{} - {} - {} - {} - {}", linha[0], linha[1], linha[2], linha[3], linha[4]);
             }
         }
