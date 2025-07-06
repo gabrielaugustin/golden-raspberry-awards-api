@@ -1,4 +1,4 @@
-package com.augustin.gabriel.goldenraspberryawardsapi.startup;
+package com.augustin.gabriel.goldenraspberryawardsapi.configs;
 
 import com.augustin.gabriel.goldenraspberryawardsapi.services.DataLoaderService;
 import lombok.RequiredArgsConstructor;
