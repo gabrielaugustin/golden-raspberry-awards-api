@@ -1,9 +1,13 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.services;
 
+import com.augustin.gabriel.goldenraspberryawardsapi.dtos.AwardsIntervalResponseDto;
+import com.augustin.gabriel.goldenraspberryawardsapi.dtos.ProducerAwardsIntervalResponseDto;
 import com.augustin.gabriel.goldenraspberryawardsapi.entities.ProducerEntity;
 import com.augustin.gabriel.goldenraspberryawardsapi.repositories.ProducerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,6 +49,37 @@ public class ProducerServiceImpl implements ProducerService {
         log.info("SUCCESS - Producers found and/or created by names (size: {})", names.size());
 
         return entities;
+    }
+
+    @Override
+    public ProducerAwardsIntervalResponseDto getAwardsIntervals(Integer limit) {
+        log.info("Getting awards intervals with limit: {}", limit);
+
+        List<Object[]> minIntervals = repository.findAwardsIntervalsWithPagination(
+                PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "interval"))
+        );
+
+        List<Object[]> maxIntervals = repository.findAwardsIntervalsWithPagination(
+                PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "interval"))
+        );
+
+        log.info("Found {} min intervals and {} max intervals", minIntervals.size(), maxIntervals.size());
+
+        return new ProducerAwardsIntervalResponseDto(
+                mapAwardsIntervals(minIntervals),
+                mapAwardsIntervals(maxIntervals)
+        );
+    }
+
+    private List<AwardsIntervalResponseDto> mapAwardsIntervals(List<Object[]> awardsIntervals) {
+        return awardsIntervals.stream()
+                .map(row -> new AwardsIntervalResponseDto(
+                        (String)  row[0], // producer
+                        (Integer) row[1], // interval
+                        (Integer) row[2], // previousWin
+                        (Integer) row[3]  // followingWin
+                ))
+                .toList();
     }
 
 }
