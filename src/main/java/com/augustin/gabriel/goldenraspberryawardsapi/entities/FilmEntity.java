@@ -36,4 +36,16 @@ public class FilmEntity {
     @OneToMany(mappedBy = "film", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FilmProducerEntity> filmProducers = new ArrayList<>();
 
+    public void setFilmStudios(List<StudioEntity> studios) {
+        this.filmStudios = studios.stream()
+                .map((s) -> FilmStudioEntity.builder().film(this).studio(s).build())
+                .toList();
+    }
+
+    public void setFilmProducers(List<ProducerEntity> producers) {
+        this.filmProducers = producers.stream()
+                .map((p) -> FilmProducerEntity.builder().film(this).producer(p).build())
+                .toList();
+    }
+
 }
