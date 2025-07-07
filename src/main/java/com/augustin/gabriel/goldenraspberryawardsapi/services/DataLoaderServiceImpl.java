@@ -1,8 +1,11 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.services;
 
+import com.augustin.gabriel.goldenraspberryawardsapi.entities.*;
+import com.augustin.gabriel.goldenraspberryawardsapi.utils.StringUtils;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,10 +14,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class DataLoaderServiceImpl implements DataLoaderService {
 
     private static final String PATH_CSV_DATA_FILE = "data.csv";
@@ -22,13 +27,17 @@ public class DataLoaderServiceImpl implements DataLoaderService {
     @Value("${csv.parser.separator-char:;}")
     private char separator;
 
+    private final FilmService filmService;
+    private final StudioService studioService;
+    private final ProducerService producerService;
+
     @Override
     public void loadDataFromCsvFile() throws Exception {
-        log.info("Loading data from csv file...");
+        log.info("Loading data from CSV file...");
 
         InputStream inputStream = getClass().getResourceAsStream("/" + PATH_CSV_DATA_FILE);
         if (inputStream == null) {
-            String message = String.format("Unable to load data from csv file (classpath:%s)", PATH_CSV_DATA_FILE);
+            String message = String.format("Unable to load data from CSV file (classpath:%s)", PATH_CSV_DATA_FILE);
             log.error(message);
             throw new FileNotFoundException(message);
         }
@@ -40,11 +49,24 @@ public class DataLoaderServiceImpl implements DataLoaderService {
         ).withSkipLines(1); // Ignoring first line (header)
 
         try (CSVReader reader = csvReaderBuilder.build()) {
-            List<String[]> linhas = reader.readAll();
-            for (String[] linha : linhas) {
-                log.info("{} - {} - {} - {} - {}", linha[0], linha[1], linha[2], linha[3], linha[4]);
+            List<String[]> lines = reader.readAll();
+            for (String[] line : lines) {
+                log.info("Reading line: {} - {} - {} - {} - {}", line[0], line[1], line[2], line[3], line[4]);
+
+                List<StudioEntity> studios = studioService.findOrCreateByNames(StringUtils.splitFromString(line[2]));
+                List<ProducerEntity> producers = producerService.findOrCreateByNames(StringUtils.splitFromString(line[3]));
+
+                FilmEntity film = filmService.create(
+                        Integer.parseInt(line[0].trim()),
+                        line[1],
+                        StringUtils.toBoolean(line[4]),
+                        studios,
+                        producers
+                );
             }
         }
+
+        log.info("CSV file data loaded successfully...");
     }
 
 }
