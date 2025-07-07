@@ -41,14 +41,10 @@ public class StudioServiceImpl implements StudioService {
             entities.add(entity);
         }
 
-        saveAll(entities);
+        repository.saveAll(entities);
         log.info("SUCCESS - Studios found and/or created by names (size: {})", names.size());
 
         return entities;
-    }
-
-    private List<StudioEntity> saveAll(List<StudioEntity> entities) {
-        return repository.saveAll(entities);
     }
 
 }

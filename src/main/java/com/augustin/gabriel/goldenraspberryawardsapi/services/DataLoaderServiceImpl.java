@@ -1,5 +1,6 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.services;
 
+import com.augustin.gabriel.goldenraspberryawardsapi.entities.ProducerEntity;
 import com.augustin.gabriel.goldenraspberryawardsapi.entities.StudioEntity;
 import com.augustin.gabriel.goldenraspberryawardsapi.utils.StringUtils;
 import com.opencsv.CSVParserBuilder;
@@ -27,6 +28,7 @@ public class DataLoaderServiceImpl implements DataLoaderService {
     private char separator;
 
     private final StudioService studioService;
+    private final ProducerService producerService;
 
     @Override
     public void loadDataFromCsvFile() throws Exception {
@@ -50,6 +52,8 @@ public class DataLoaderServiceImpl implements DataLoaderService {
             for (String[] linha : linhas) {
 
                 List<StudioEntity> studios = studioService.findOrCreateByNames(StringUtils.splitFromString(linha[2]));
+                List<ProducerEntity> producers = producerService.findOrCreateByNames(StringUtils.splitFromString(linha[3]));
+
 
 
                 log.info("{} - {} - {} - {} - {}", linha[0], linha[1], linha[2], linha[3], linha[4]);
