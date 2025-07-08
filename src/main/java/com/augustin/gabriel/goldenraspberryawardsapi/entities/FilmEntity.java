@@ -38,14 +38,14 @@ public class FilmEntity {
 
     public void setFilmStudios(List<StudioEntity> studios) {
         this.filmStudios = studios.stream()
-                .map((s) -> FilmStudioEntity.builder().film(this).studio(s).build())
-                .toList();
+                .map(s -> FilmStudioEntity.builder().film(this).studio(s).build())
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
     }
 
     public void setFilmProducers(List<ProducerEntity> producers) {
         this.filmProducers = producers.stream()
-                .map((p) -> FilmProducerEntity.builder().film(this).producer(p).build())
-                .toList();
+                .map(p -> FilmProducerEntity.builder().film(this).producer(p).build())
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
     }
 
 }
