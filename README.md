@@ -141,8 +141,8 @@ Por exemplo, para mudar o caracter para _vírgula_, adicione esta propriedade no
 
 ```
 src/main/java/com/augustin/gabriel/goldenraspberryawardsapi/
-├── configs/           # Configurações da aplicação
-├── controllers/       # Controladores REST
+├── configs/          # Configurações da aplicação
+├── controllers/      # Controladores REST
 ├── dtos/             # Data Transfer Objects
 ├── entities/         # Entidades JPA
 ├── repositories/     # Repositórios de dados
