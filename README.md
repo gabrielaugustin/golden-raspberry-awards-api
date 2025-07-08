@@ -1,5 +1,12 @@
 # 🏆 Golden Raspberry Awards - API 🏆
 
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Maven](https://img.shields.io/badge/Maven-3.6+-blue.svg)](https://maven.apache.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/gabrielaugustin/golden-raspberry-awards-api)
+[![Tests](https://img.shields.io/badge/Tests-32%20passed-brightgreen.svg)](https://github.com/gabrielaugustin/golden-raspberry-awards-api)
+
 API REST para análise dos intervalos de prêmios dos produtores do Golden Raspberry Awards (Razzie Awards). Esta aplicação processa dados históricos dos prêmios e identifica os produtores com os maiores e menores intervalos entre vitórias consecutivas.
 
 ## 📋 Descrição
@@ -83,7 +90,14 @@ curl http://localhost:8080/producers/awards-intervals
 curl http://localhost:8080/producers/awards-intervals?limit=3
 ```
 
-#### Exemplo de resposta:
+```bash
+# Retorna os top 10 produtores com maior e menor intervalo
+curl http://localhost:8080/producers/awards-intervals?limit=10
+```
+
+#### Exemplos de resposta:
+
+**Resposta padrão (limit=1):**
 
 ```json
 {
@@ -103,6 +117,80 @@ curl http://localhost:8080/producers/awards-intervals?limit=3
       "followingWin": 2015
     }
   ]
+}
+```
+
+**Resposta com múltiplos resultados (limit=3):**
+
+```json
+{
+  "min": [
+    {
+      "producer": "Joel Silver",
+      "interval": 1,
+      "previousWin": 1990,
+      "followingWin": 1991
+    },
+    {
+      "producer": "Bo Derek",
+      "interval": 6,
+      "previousWin": 1984,
+      "followingWin": 1990
+    },
+    {
+      "producer": "Buzz Feitshans",
+      "interval": 7,
+      "previousWin": 1985,
+      "followingWin": 1992
+    }
+  ],
+  "max": [
+    {
+      "producer": "Matthew Vaughn",
+      "interval": 13,
+      "previousWin": 2002,
+      "followingWin": 2015
+    },
+    {
+      "producer": "Bo Derek",
+      "interval": 6,
+      "previousWin": 1984,
+      "followingWin": 1990
+    },
+    {
+      "producer": "Buzz Feitshans",
+      "interval": 7,
+      "previousWin": 1985,
+      "followingWin": 1992
+    }
+  ]
+}
+```
+
+**Resposta quando não há dados suficientes:**
+
+```json
+{
+  "min": [],
+  "max": []
+}
+```
+
+#### Casos de Erro:
+
+**Parâmetro inválido:**
+
+```bash
+curl http://localhost:8080/producers/awards-intervals?limit=-1
+```
+
+**Resposta de erro:**
+
+```json
+{
+  "error": "Invalid parameter",
+  "message": "Page size must not be less than one",
+  "status": "400"
 }
 ```
 
@@ -161,6 +249,32 @@ Para executar os testes:
 ```bash
 ./mvnw test
 ```
+
+### Cobertura de Testes
+
+O projeto possui uma cobertura abrangente de testes (apenas testes de integração, conforme especificado em documento):
+
+- **32 testes** executados com sucesso
+- **Testes de Integração**: Cobertura completa dos endpoints
+- **Testes de Serviço**: Validação da lógica de negócio
+- **Testes End-to-End**: Cenários completos de uso
+
+#### Tipos de Teste Implementados:
+
+1. **Testes de Integração**:
+
+   - `ProducerControllerIntegrationTest` - Testa endpoints de produtores
+   - `HealthControllerIntegrationTest` - Testa endpoints de health check
+   - `EndToEndIntegrationTest` - Testa fluxos completos
+
+2. **Testes de Serviço**:
+
+   - `ProducerServiceIntegrationTest` - Testa lógica de cálculo de intervalos
+   - `FilmServiceIntegrationTest` - Testa criação e manipulação de filmes
+   - `StudioServiceIntegrationTest` - Testa operações com estúdios
+
+3. **Testes de Carga de Dados**:
+   - `DataLoaderServiceIntegrationTest` - Testa carregamento do CSV
 
 ## 👨‍💻 Desenvolvedor
 
