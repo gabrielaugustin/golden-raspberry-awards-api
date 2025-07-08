@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @ControllerAdvice
@@ -54,13 +55,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception e) {
         log.error("Unexpected error: {}", e.getMessage(), e);
-        
+
         ErrorResponseDto error = new ErrorResponseDto(
-            "Internal server error",
-            "An unexpected error occurred",
-            "500"
+                "Internal server error",
+                "An unexpected error occurred",
+                "500"
         );
-        
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
-} 
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleNoResourceFoundException(NoResourceFoundException e) {
+        ErrorResponseDto error = new ErrorResponseDto(
+                "No Resource Found",
+                e.getLocalizedMessage(),
+                "404"
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+}
