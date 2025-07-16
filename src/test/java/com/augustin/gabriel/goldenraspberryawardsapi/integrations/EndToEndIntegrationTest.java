@@ -110,31 +110,6 @@ class EndToEndIntegrationTest {
     }
 
     @Test
-    void shouldReturnLimitedAwardsIntervals_whenCompleteWorkflowWithLimitExecuted() throws Exception {
-        setupTestData();
-        
-        mockMvc.perform(get("/producers/awards-intervals")
-                .param("limit", "3")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasKey("min")))
-                .andExpect(jsonPath("$", hasKey("max")))
-                .andExpect(jsonPath("$.min", hasSize(lessThanOrEqualTo(3))))
-                .andExpect(jsonPath("$.max", hasSize(lessThanOrEqualTo(3))))
-                .andExpect(jsonPath("$.min[*].producer", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.min[*].interval", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.min[*].previousWin", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.min[*].followingWin", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.max[*].producer", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.max[*].interval", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.max[*].previousWin", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.max[*].followingWin", not(emptyOrNullString())));
-    }
-
-
-
-    @Test
     void shouldHandleErrorsGracefully_whenInvalidEndpointCalled() throws Exception {
         mockMvc.perform(get("/nonexistent")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -146,39 +121,13 @@ class EndToEndIntegrationTest {
     }
 
     @Test
-    void shouldHandleDatabaseErrorsGracefully_whenDataAccessIssuesOccur() throws Exception {
-        setupTestData();
-        
-        mockMvc.perform(get("/producers/awards-intervals")
-                .param("limit", "1000")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasKey("min")))
-                .andExpect(jsonPath("$", hasKey("max")));
-    }
-
-    @Test
     void shouldMaintainDataConsistency_whenMultipleRequestsAreMade() throws Exception {
         setupTestData();
         
         mockMvc.perform(get("/producers/awards-intervals")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.min", hasSize(greaterThanOrEqualTo(0))))
-                .andExpect(jsonPath("$.max", hasSize(greaterThanOrEqualTo(0))));
-        
-        mockMvc.perform(get("/producers/awards-intervals")
-                .param("limit", "5")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.min", hasSize(lessThanOrEqualTo(5))))
-                .andExpect(jsonPath("$.max", hasSize(lessThanOrEqualTo(5))));
-        
-        mockMvc.perform(get("/producers/awards-intervals")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.min", hasSize(greaterThanOrEqualTo(0))))
-                .andExpect(jsonPath("$.max", hasSize(greaterThanOrEqualTo(0))));
+                .andExpect(jsonPath("$.min", hasSize(greaterThan(0))))
+                .andExpect(jsonPath("$.max", hasSize(greaterThan(0))));
     }
 } 

@@ -9,6 +9,6 @@ public interface ProducerService {
 
     List<ProducerEntity> findOrCreateByNames(List<String> names);
 
-    ProducerAwardsIntervalResponseDto getAwardsIntervals(Integer limit);
+    ProducerAwardsIntervalResponseDto getAwardsIntervals();
 
 }

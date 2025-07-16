@@ -1,7 +1,7 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.repositories;
 
 import com.augustin.gabriel.goldenraspberryawardsapi.entities.ProducerEntity;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,6 +24,6 @@ public interface ProducerRepository extends JpaRepository<ProducerEntity, Long> 
         AND fp2.film.winner = true
         AND fp1.film.nominationYear < fp2.film.nominationYear
         """)
-    List<Object[]> findAwardsIntervalsWithPagination(Pageable pageable);
+    List<Object[]> findAwardsIntervalsWithSort(Sort sort);
 
 }

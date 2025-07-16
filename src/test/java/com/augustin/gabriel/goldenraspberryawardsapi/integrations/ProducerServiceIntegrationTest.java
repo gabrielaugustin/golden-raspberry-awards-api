@@ -92,7 +92,7 @@ class ProducerServiceIntegrationTest {
 
     @Test
     void shouldReturnEmptyIntervals_whenNoAwardsDataExists() {
-        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals(1);
+        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals();
 
         assertNotNull(result);
         assertTrue(result.min().isEmpty());
@@ -122,7 +122,7 @@ class ProducerServiceIntegrationTest {
         filmRepository.saveAndFlush(film1);
         filmRepository.saveAndFlush(film2);
 
-        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals(1);
+        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals();
 
         assertNotNull(result);
         assertFalse(result.min().isEmpty(), "Should have minimum interval data");
@@ -159,7 +159,7 @@ class ProducerServiceIntegrationTest {
 
     @Test
     void shouldReturnLimitedIntervals_whenCustomLimitProvided() {
-        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals(5);
+        ProducerAwardsIntervalResponseDto result = producerService.getAwardsIntervals();
 
         assertNotNull(result);
     }

@@ -109,19 +109,4 @@ class ProducerControllerIntegrationTest {
                 .andExpect(jsonPath("$.max[*].followingWin", not(emptyOrNullString())));
     }
 
-    @Test
-    void shouldReturnBadRequest_whenInvalidLimitProvided() throws Exception {
-        mockMvc.perform(get("/producers/awards-intervals")
-                .param("limit", "-1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldReturnBadRequest_whenZeroLimitProvided() throws Exception {
-        mockMvc.perform(get("/producers/awards-intervals")
-                .param("limit", "0")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
 }
