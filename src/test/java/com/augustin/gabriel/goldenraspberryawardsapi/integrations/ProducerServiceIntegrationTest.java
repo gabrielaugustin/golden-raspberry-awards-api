@@ -1,7 +1,7 @@
 package com.augustin.gabriel.goldenraspberryawardsapi.integrations;
 
-import com.augustin.gabriel.goldenraspberryawardsapi.dtos.ProducerAwardsIntervalResponseDto;
 import com.augustin.gabriel.goldenraspberryawardsapi.dtos.AwardsIntervalResponseDto;
+import com.augustin.gabriel.goldenraspberryawardsapi.dtos.ProducerAwardsIntervalResponseDto;
 import com.augustin.gabriel.goldenraspberryawardsapi.entities.FilmEntity;
 import com.augustin.gabriel.goldenraspberryawardsapi.entities.ProducerEntity;
 import com.augustin.gabriel.goldenraspberryawardsapi.repositories.FilmRepository;
