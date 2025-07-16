@@ -52,15 +52,15 @@ public class ProducerServiceImpl implements ProducerService {
     }
 
     @Override
-    public ProducerAwardsIntervalResponseDto getAwardsIntervals(Integer limit) {
-        log.info("Getting awards intervals with limit: {}", limit);
+    public ProducerAwardsIntervalResponseDto getAwardsIntervals() {
+        log.info("Getting awards intervals");
 
-        List<Object[]> minIntervals = repository.findAwardsIntervalsWithPagination(
-                PageRequest.of(0, limit, Sort.by(Sort.Direction.ASC, "interval"))
+        List<Object[]> minIntervals = repository.findAwardsIntervalsWithSort(
+                Sort.by(Sort.Direction.ASC, "interval")
         );
 
-        List<Object[]> maxIntervals = repository.findAwardsIntervalsWithPagination(
-                PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "interval"))
+        List<Object[]> maxIntervals = repository.findAwardsIntervalsWithSort(
+                Sort.by(Sort.Direction.DESC, "interval")
         );
 
         log.info("Found {} min intervals and {} max intervals", minIntervals.size(), maxIntervals.size());

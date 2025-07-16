@@ -18,11 +18,12 @@ public class ProducerController {
     private final ProducerService service;
 
     @GetMapping("awards-intervals")
-    public ProducerAwardsIntervalResponseDto getAwardsIntervals(
-        @RequestParam(value = "limit", required = false, defaultValue = "1") Integer limit
-    ) {
-        log.info("Requesting awards intervals with limit: {}", limit);
-        return service.getAwardsIntervals(limit);
+    public ProducerAwardsIntervalResponseDto getAwardsIntervals() {
+        log.info("Requesting awards intervals");
+        ProducerAwardsIntervalResponseDto response = service.getAwardsIntervals();
+
+        log.info("Requesting awards intervals");
+        return response;
     }
 
 }

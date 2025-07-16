@@ -76,51 +76,15 @@ A aplicação estará disponível em: **http://localhost:8080**
 ### Produtores
 
 - **GET** `/producers/awards-intervals` - Retorna os intervalos de prêmios dos produtores
-  - **Parâmetro opcional:** `limit` (padrão: 1) - Número de resultados para retornar
 
 #### Exemplos de uso:
 
 ```bash
-# Retorna o top 1 produtor com maior e menor intervalo
+# Retorna os rankings de produtores com maior e menor intervalo entre seus prêmios
 curl http://localhost:8080/producers/awards-intervals
 ```
 
-```bash
-# Retorna os top 3 produtores com maior e menor intervalo
-curl http://localhost:8080/producers/awards-intervals?limit=3
-```
-
-```bash
-# Retorna os top 10 produtores com maior e menor intervalo
-curl http://localhost:8080/producers/awards-intervals?limit=10
-```
-
 #### Exemplos de resposta:
-
-**Resposta padrão (limit=1):**
-
-```json
-{
-  "min": [
-    {
-      "producer": "Joel Silver",
-      "interval": 1,
-      "previousWin": 1990,
-      "followingWin": 1991
-    }
-  ],
-  "max": [
-    {
-      "producer": "Matthew Vaughn",
-      "interval": 13,
-      "previousWin": 2002,
-      "followingWin": 2015
-    }
-  ]
-}
-```
-
-**Resposta com múltiplos resultados (limit=3):**
 
 ```json
 {
@@ -173,24 +137,6 @@ curl http://localhost:8080/producers/awards-intervals?limit=10
 {
   "min": [],
   "max": []
-}
-```
-
-#### Casos de Erro:
-
-**Parâmetro inválido:**
-
-```bash
-curl http://localhost:8080/producers/awards-intervals?limit=-1
-```
-
-**Resposta de erro:**
-
-```json
-{
-  "error": "Invalid parameter",
-  "message": "Page size must not be less than one",
-  "status": "400"
 }
 ```
 
