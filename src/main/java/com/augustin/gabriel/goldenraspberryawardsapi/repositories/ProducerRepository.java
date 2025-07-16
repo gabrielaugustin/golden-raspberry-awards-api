@@ -14,15 +14,18 @@ public interface ProducerRepository extends JpaRepository<ProducerEntity, Long> 
 
     @Query("""
         SELECT
-            fp1.producer.name,
-            (fp2.film.nominationYear - fp1.film.nominationYear) as interval,
-            fp1.film.nominationYear,
-            fp2.film.nominationYear
-        FROM FilmProducerEntity fp1
-        JOIN FilmProducerEntity fp2 ON fp2.producer = fp1.producer
-        WHERE fp1.film.winner = true
-        AND fp2.film.winner = true
-        AND fp1.film.nominationYear < fp2.film.nominationYear
+            fp.producer.name,
+            (fp.film.nominationYear - LAG(fp.film.nominationYear) OVER (
+                PARTITION BY fp.producer 
+                ORDER BY fp.film.nominationYear
+            )) as interval,
+            LAG(fp.film.nominationYear) OVER (
+                PARTITION BY fp.producer 
+                ORDER BY fp.film.nominationYear
+            ) as previousWin,
+            fp.film.nominationYear as followingWin
+        FROM FilmProducerEntity fp
+        WHERE fp.film.winner = true
         """)
     List<Object[]> findAwardsIntervalsWithSort(Sort sort);
 

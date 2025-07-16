@@ -62,16 +62,18 @@ public class ProducerServiceImpl implements ProducerService {
                 Sort.by(Sort.Direction.DESC, "interval")
         );
 
-        log.info("Found {} min intervals and {} max intervals", minIntervals.size(), maxIntervals.size());
-
-        return new ProducerAwardsIntervalResponseDto(
+        ProducerAwardsIntervalResponseDto response = new ProducerAwardsIntervalResponseDto(
                 mapAwardsIntervals(minIntervals),
                 mapAwardsIntervals(maxIntervals)
         );
+
+        log.info("Found {} min intervals and {} max intervals", response.min().size(), response.max().size());
+        return response;
     }
 
     private List<AwardsIntervalResponseDto> mapAwardsIntervals(List<Object[]> awardsIntervals) {
         return awardsIntervals.stream()
+                .filter(row -> row[1] != null)
                 .map(row -> new AwardsIntervalResponseDto(
                         (String)  row[0], // producer
                         (Integer) row[1], // interval
